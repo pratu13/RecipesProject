@@ -8,50 +8,45 @@
 import Foundation
 import SwiftUI
 
-protocol ImageCache {
-    associatedtype CachedImage
-    func image(for id: NSString) -> CachedImage?
-    func insertImage(_ image: CachedImage?, for id: NSString)
+enum ImageDownloadError: Error {
+     case urlIssue
+     case downloadFailed
+     case invalidData
 }
 
-@Observable
-class RecipeImageService<Cache: ImageCache> where Cache.CachedImage == UIImage {
+actor RecipeImageService {
     
-    private let cache: Cache
+    private static let cache = NSImageCache()
     var image: UIImage? = nil
-    private let recipe: Recipe
- 
-    init(recipe: Recipe, cache: Cache) {
-        self.recipe = recipe
-        self.cache = cache
-    }
 
-    func downloadRecipeImage() async {
-        guard let url = URL(string: recipe.photo_url_small) else { print("Error")
-            return }
-        
-        if let cachedImage = cache.image(for: NSString(string: recipe.uuid)) {
-            self.image = cachedImage
-            return
+    private init() { }
+
+    static func downloaImage(for recipe: Recipe, of size: ImageSize) async -> Result<UIImage, ImageDownloadError> {
+        guard let largeImageURL = recipe.photo_url_large, let smallImageURL = recipe.photo_url_small else {
+            return .failure(.urlIssue)
+        }
+        guard let url = URL(string: size == .large ? largeImageURL : smallImageURL) else {
+            print("Error")
+            return .failure(.urlIssue)
         }
         
-        Task { [weak self] in
-            guard let self = self else { return }
-            let data = await NetworkingManager.downloadData(from: .init(type: .imageSmall(url.absoluteString)))
-            
-            switch data {
-            case .success(let success):
-                guard let downloadedImage = UIImage(data: success) else {
-                    print("Invalid image data")
-                    return
-                }
-                await MainActor.run {
-                    self.image = downloadedImage
-                    self.cache.insertImage(downloadedImage, for: NSString(string: self.recipe.uuid))
-                }
-            case .failure(let failure):
-                print("Error downloading image: \(failure)")
+        if let cachedImage = self.cache.image(for: NSString(string: recipe.uuid)) {
+            return .success(cachedImage)
+        }
+        
+        let data = await NetworkingManager.downloadData(from: .init(type: .image(url.absoluteString)))
+        
+        switch data {
+        case .success(let success):
+            guard let downloadedImage = UIImage(data: success) else {
+                print("Invalid image data")
+                return .failure(.invalidData)
             }
+            
+            self.cache.insertImage(downloadedImage, for: NSString(string: recipe.uuid))
+            return .success(downloadedImage)
+        case .failure(_):
+            return .failure(.downloadFailed)
         }
     }
 }

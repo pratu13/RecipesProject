@@ -14,8 +14,9 @@ protocol Endpoint {
 }
 
 extension Endpoint {
+
     var url: URL {
-        return baseURL.appendingPathComponent(path)
+        return URL(string: path)!
     }
 }
 
@@ -23,8 +24,7 @@ enum RecipeEndpointType {
     case allRecipes
     case malformedData
     case emptyData
-    case imageLarge(String)
-    case imageSmall(String)
+    case image(String)
 }
 
 struct RecipesEndpoint: Endpoint {
@@ -37,15 +37,13 @@ struct RecipesEndpoint: Endpoint {
     var path: String {
         switch type {
         case .allRecipes:
-            return "recipes.json"
+            return baseURL.appendingPathComponent("recipes.json").absoluteString
         case .malformedData:
             return "recipes-malformed.json"
         case .emptyData:
             return "recipes-empty.json"
-        case .imageLarge(let urlString):
-            return urlString.suffix(baseURL.absoluteString.count).base
-        case .imageSmall(let urlString):
-            return urlString.suffix(baseURL.absoluteString.count).base
+        case .image(let urlString):
+            return urlString
         }
     }
 }

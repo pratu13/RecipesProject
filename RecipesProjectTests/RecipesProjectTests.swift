@@ -2,16 +2,42 @@
 //  RecipesProjectTests.swift
 //  RecipesProjectTests
 //
-//  Created by Pratyush on 3/11/25.
+//  Created by Pratyush on 3/15/25.
 //
 
-import Testing
+import XCTest
+import SwiftUI
 @testable import RecipesProject
 
-struct RecipesProjectTests {
-
-    @Test func example() async throws {
-        // Write your test here and use APIs like `#expect(...)` to check expected conditions.
+final class RecipesProjectTests: XCTestCase {
+    
+    func testRecipeImageViewModelInitialization() {
+        let viewModel = RecipeImageViewModel(size: .large)
+        
+        XCTAssertTrue(viewModel.isLoading)
+        XCTAssertNil(viewModel.image)
     }
-
+    
+    func testGetImageSuccess() async {
+        let recipe = Recipe.mock
+        let viewModel = RecipeImageViewModel(size: .large)
+        
+        await viewModel.getImage(for: recipe)
+        
+        XCTAssertFalse(viewModel.isLoading)
+        XCTAssertNotNil(viewModel.image)
+    }
+    
+    func testGetImageFailure() async {
+        let recipe = Recipe(cuisine: "Test", name: "Test Recipe", photo_url_large: nil, photo_url_small: nil, source_url: nil, uuid: "test-uuid", youtube_url: nil)
+        let viewModel = RecipeImageViewModel(size: .large)
+        
+        await viewModel.getImage(for: recipe)
+        
+        XCTAssertFalse(viewModel.isLoading)
+        XCTAssertNil(viewModel.image)
+    }
+    
 }
+
+

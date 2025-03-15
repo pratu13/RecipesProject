@@ -7,14 +7,7 @@
 	objects = {
 
 /* Begin PBXContainerItemProxy section */
-		33F95CFB2D80FFE300ACDB26 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 33F95CE22D80FFE000ACDB26 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 33F95CE92D80FFE000ACDB26;
-			remoteInfo = RecipesProject;
-		};
-		33F95D052D80FFE300ACDB26 /* PBXContainerItemProxy */ = {
+		33F275852D86438200DF39B2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 33F95CE22D80FFE000ACDB26 /* Project object */;
 			proxyType = 1;
@@ -24,45 +17,32 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		33F275812D86438200DF39B2 /* RecipesProjectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RecipesProjectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		33F95CEA2D80FFE000ACDB26 /* RecipesProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecipesProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		33F95CFA2D80FFE300ACDB26 /* RecipesProjectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RecipesProjectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		33F95D042D80FFE300ACDB26 /* RecipesProjectUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RecipesProjectUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		33F275822D86438200DF39B2 /* RecipesProjectTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = RecipesProjectTests;
+			sourceTree = "<group>";
+		};
 		33F95CEC2D80FFE000ACDB26 /* RecipesProject */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = RecipesProject;
 			sourceTree = "<group>";
 		};
-		33F95CFD2D80FFE300ACDB26 /* RecipesProjectTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = RecipesProjectTests;
-			sourceTree = "<group>";
-		};
-		33F95D072D80FFE300ACDB26 /* RecipesProjectUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = RecipesProjectUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		33F2757E2D86438200DF39B2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		33F95CE72D80FFE000ACDB26 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		33F95CF72D80FFE300ACDB26 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		33F95D012D80FFE300ACDB26 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -76,8 +56,7 @@
 			isa = PBXGroup;
 			children = (
 				33F95CEC2D80FFE000ACDB26 /* RecipesProject */,
-				33F95CFD2D80FFE300ACDB26 /* RecipesProjectTests */,
-				33F95D072D80FFE300ACDB26 /* RecipesProjectUITests */,
+				33F275822D86438200DF39B2 /* RecipesProjectTests */,
 				33F95CEB2D80FFE000ACDB26 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -86,8 +65,7 @@
 			isa = PBXGroup;
 			children = (
 				33F95CEA2D80FFE000ACDB26 /* RecipesProject.app */,
-				33F95CFA2D80FFE300ACDB26 /* RecipesProjectTests.xctest */,
-				33F95D042D80FFE300ACDB26 /* RecipesProjectUITests.xctest */,
+				33F275812D86438200DF39B2 /* RecipesProjectTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,6 +73,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		33F275802D86438200DF39B2 /* RecipesProjectTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 33F275872D86438200DF39B2 /* Build configuration list for PBXNativeTarget "RecipesProjectTests" */;
+			buildPhases = (
+				33F2757D2D86438200DF39B2 /* Sources */,
+				33F2757E2D86438200DF39B2 /* Frameworks */,
+				33F2757F2D86438200DF39B2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				33F275862D86438200DF39B2 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				33F275822D86438200DF39B2 /* RecipesProjectTests */,
+			);
+			name = RecipesProjectTests;
+			packageProductDependencies = (
+			);
+			productName = RecipesProjectTests;
+			productReference = 33F275812D86438200DF39B2 /* RecipesProjectTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		33F95CE92D80FFE000ACDB26 /* RecipesProject */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 33F95D0E2D80FFE300ACDB26 /* Build configuration list for PBXNativeTarget "RecipesProject" */;
@@ -117,52 +118,6 @@
 			productReference = 33F95CEA2D80FFE000ACDB26 /* RecipesProject.app */;
 			productType = "com.apple.product-type.application";
 		};
-		33F95CF92D80FFE300ACDB26 /* RecipesProjectTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 33F95D112D80FFE300ACDB26 /* Build configuration list for PBXNativeTarget "RecipesProjectTests" */;
-			buildPhases = (
-				33F95CF62D80FFE300ACDB26 /* Sources */,
-				33F95CF72D80FFE300ACDB26 /* Frameworks */,
-				33F95CF82D80FFE300ACDB26 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				33F95CFC2D80FFE300ACDB26 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				33F95CFD2D80FFE300ACDB26 /* RecipesProjectTests */,
-			);
-			name = RecipesProjectTests;
-			packageProductDependencies = (
-			);
-			productName = RecipesProjectTests;
-			productReference = 33F95CFA2D80FFE300ACDB26 /* RecipesProjectTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		33F95D032D80FFE300ACDB26 /* RecipesProjectUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 33F95D142D80FFE300ACDB26 /* Build configuration list for PBXNativeTarget "RecipesProjectUITests" */;
-			buildPhases = (
-				33F95D002D80FFE300ACDB26 /* Sources */,
-				33F95D012D80FFE300ACDB26 /* Frameworks */,
-				33F95D022D80FFE300ACDB26 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				33F95D062D80FFE300ACDB26 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				33F95D072D80FFE300ACDB26 /* RecipesProjectUITests */,
-			);
-			name = RecipesProjectUITests;
-			packageProductDependencies = (
-			);
-			productName = RecipesProjectUITests;
-			productReference = 33F95D042D80FFE300ACDB26 /* RecipesProjectUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -173,16 +128,12 @@
 				LastSwiftUpdateCheck = 1620;
 				LastUpgradeCheck = 1620;
 				TargetAttributes = {
+					33F275802D86438200DF39B2 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 33F95CE92D80FFE000ACDB26;
+					};
 					33F95CE92D80FFE000ACDB26 = {
 						CreatedOnToolsVersion = 16.2;
-					};
-					33F95CF92D80FFE300ACDB26 = {
-						CreatedOnToolsVersion = 16.2;
-						TestTargetID = 33F95CE92D80FFE000ACDB26;
-					};
-					33F95D032D80FFE300ACDB26 = {
-						CreatedOnToolsVersion = 16.2;
-						TestTargetID = 33F95CE92D80FFE000ACDB26;
 					};
 				};
 			};
@@ -201,28 +152,20 @@
 			projectRoot = "";
 			targets = (
 				33F95CE92D80FFE000ACDB26 /* RecipesProject */,
-				33F95CF92D80FFE300ACDB26 /* RecipesProjectTests */,
-				33F95D032D80FFE300ACDB26 /* RecipesProjectUITests */,
+				33F275802D86438200DF39B2 /* RecipesProjectTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		33F2757F2D86438200DF39B2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		33F95CE82D80FFE000ACDB26 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		33F95CF82D80FFE300ACDB26 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		33F95D022D80FFE300ACDB26 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -232,21 +175,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		33F2757D2D86438200DF39B2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		33F95CE62D80FFE000ACDB26 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		33F95CF62D80FFE300ACDB26 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		33F95D002D80FFE300ACDB26 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -256,19 +192,48 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		33F95CFC2D80FFE300ACDB26 /* PBXTargetDependency */ = {
+		33F275862D86438200DF39B2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 33F95CE92D80FFE000ACDB26 /* RecipesProject */;
-			targetProxy = 33F95CFB2D80FFE300ACDB26 /* PBXContainerItemProxy */;
-		};
-		33F95D062D80FFE300ACDB26 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 33F95CE92D80FFE000ACDB26 /* RecipesProject */;
-			targetProxy = 33F95D052D80FFE300ACDB26 /* PBXContainerItemProxy */;
+			targetProxy = 33F275852D86438200DF39B2 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		33F275882D86438200DF39B2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pratyush.RecipesProjectTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RecipesProject.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/RecipesProject";
+			};
+			name = Debug;
+		};
+		33F275892D86438200DF39B2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pratyush.RecipesProjectTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RecipesProject.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/RecipesProject";
+			};
+			name = Release;
+		};
 		33F95D0C2D80FFE300ACDB26 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -444,77 +409,18 @@
 			};
 			name = Release;
 		};
-		33F95D122D80FFE300ACDB26 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.pratyush.RecipesProjectTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RecipesProject.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/RecipesProject";
-			};
-			name = Debug;
-		};
-		33F95D132D80FFE300ACDB26 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.pratyush.RecipesProjectTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RecipesProject.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/RecipesProject";
-			};
-			name = Release;
-		};
-		33F95D152D80FFE300ACDB26 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.pratyush.RecipesProjectUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = RecipesProject;
-			};
-			name = Debug;
-		};
-		33F95D162D80FFE300ACDB26 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.pratyush.RecipesProjectUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = RecipesProject;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		33F275872D86438200DF39B2 /* Build configuration list for PBXNativeTarget "RecipesProjectTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				33F275882D86438200DF39B2 /* Debug */,
+				33F275892D86438200DF39B2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		33F95CE52D80FFE000ACDB26 /* Build configuration list for PBXProject "RecipesProject" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -529,24 +435,6 @@
 			buildConfigurations = (
 				33F95D0F2D80FFE300ACDB26 /* Debug */,
 				33F95D102D80FFE300ACDB26 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		33F95D112D80FFE300ACDB26 /* Build configuration list for PBXNativeTarget "RecipesProjectTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				33F95D122D80FFE300ACDB26 /* Debug */,
-				33F95D132D80FFE300ACDB26 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		33F95D142D80FFE300ACDB26 /* Build configuration list for PBXNativeTarget "RecipesProjectUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				33F95D152D80FFE300ACDB26 /* Debug */,
-				33F95D162D80FFE300ACDB26 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

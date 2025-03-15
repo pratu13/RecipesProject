@@ -26,9 +26,7 @@ class NetworkingManager {
     
     static func downloadData(from endpoint: RecipesEndpoint) async -> Result<Data, Error> {
         do {
-            // Use the complete URL from the endpoint.
             let (data, response) = try await URLSession.shared.data(from: endpoint.url)
-            // Validate the HTTP response.
             let validatedData = try handleURLResponse(data: data, response: response, url: endpoint.url)
             return .success(validatedData)
         } catch {

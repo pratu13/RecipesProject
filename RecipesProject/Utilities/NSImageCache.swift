@@ -8,6 +8,12 @@
 import UIKit
 import Foundation
 
+protocol ImageCache {
+    associatedtype CachedImage
+    func image(for id: NSString) -> CachedImage?
+    func insertImage(_ image: CachedImage?, for id: NSString)
+}
+
 class NSImageCache: ImageCache {
     typealias CachedImage = UIImage
     private let cache = NSCache<NSString, UIImage>()
