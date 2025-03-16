@@ -32,10 +32,9 @@ struct RecipeDetailView: View {
                     }
                 
                 recipeTitle
-                
+            
                 HStack {
                     cuisineSection
-                    
                     if let _ = recipe.source_url {
                         sourceSection
                     }
@@ -48,9 +47,9 @@ struct RecipeDetailView: View {
             .sheet(isPresented: $showSafari) {
                 if let sourceUrl = URL(string: recipe.source_url ?? "") {
                     SafariView(url: sourceUrl)
+                        .ignoresSafeArea()
                 }
             }
-            .ignoresSafeArea()
         }
         .ignoresSafeArea()
     }
@@ -71,8 +70,6 @@ extension RecipeDetailView {
             .background(Color.yellow)
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding(20)
-        
-        
     }
     
     var cuisineSection: some View {

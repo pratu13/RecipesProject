@@ -17,33 +17,47 @@ struct RecipesHomeView: View {
     @State var animateButton: Bool = false
     
     var body: some View {
-        ZStack(alignment: .bottom) {
-            Color.black
-                .ignoresSafeArea()
-            ZStack(alignment: .top) {
-                backgroundImage
-    
-                HStack {
-                    SearchBarView(viewModel: viewModel)
+        ZStack(alignment: .center) {
+            ZStack(alignment: .bottom) {
+                Color.black
+                    .ignoresSafeArea()
+                ZStack(alignment: .top) {
+                    backgroundImage
+        
+                    HStack {
+                        SearchBarView(viewModel: viewModel)
+                    }
                 }
+
+                VStack {
+                    recipeInfoSection
+                    recipeListSection
+                }
+                .task {
+                    await backgroundImageViewModel.getImage(for: selectedRecipe)
+                    await viewModel.getAllRecipes()
+                }
+                .animation(.default, value: selectedRecipe)
+               
+            }
+            .fullScreenCover(isPresented: $showDetail) {
+                RecipeDetailView(recipe: selectedRecipe,
+                                 showDetail: $showDetail)
+            }
+            .onAppear {
+                print("RecipesHomeView onAppear")
             }
             
-            VStack {
-                recipeInfoSection
-                recipeListSection
+            if (viewModel.errorDownloading) {
+                ZStack {
+                    Color.black.opacity(0.9)
+                        .ignoresSafeArea()
+                        .transition(.asymmetric(insertion: .scale, removal: .scale))
+                    ErrorView(errorDescription: viewModel.errorDescription)
+                        .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .scale))
+                }
+                .animation(.easeInOut, value: viewModel.error)
             }
-            .task {
-                await backgroundImageViewModel.getImage(for: selectedRecipe)
-                await viewModel.getAllRecipes()
-            }
-            .animation(.default, value: selectedRecipe)
-        }
-        .fullScreenCover(isPresented: $showDetail) {
-            RecipeDetailView(recipe: selectedRecipe,
-                             showDetail: $showDetail)
-        }
-        .onAppear {
-            print("RecipesHomeView onAppear")
         }
     }
     
@@ -72,9 +86,9 @@ private extension RecipesHomeView {
                             .tint(.white)
                         Spacer()
                     }
-                  
+                    
                 }
-              
+                
                 Spacer()
             }
         }
@@ -130,6 +144,7 @@ private extension RecipesHomeView {
             .animation(.spring(), value: animateButton)
             .onChange(of: selectedRecipe, { _, newValue in
                 Task {
+                    
                     await backgroundImageViewModel.getImage(for: newValue)
                 }
                 animate()
@@ -145,7 +160,7 @@ private extension RecipesHomeView {
                 .font(.custom(.heavy, relativeTo: .title3))
                 .padding(.horizontal, 16)
                 .foregroundStyle(Color.white)
-            if viewModel.isLoading {
+            if viewModel.loading {
                 HStack{
                     Spacer()
                     ProgressView()
@@ -153,10 +168,10 @@ private extension RecipesHomeView {
                     Spacer()
                 }
              
+            } else if (viewModel.filtered.isEmpty && viewModel.recipes.isEmpty) {
+                noResultsView
             } else if (!viewModel.searchText.isEmpty && viewModel.filtered.isEmpty) {
-                Text("No results found")
-                    .font(.custom(.heavy, relativeTo: .caption2))
-                    .foregroundStyle(.white)
+                noResultsView
             }
             else {
                 recipeList
@@ -176,6 +191,31 @@ private extension RecipesHomeView {
                         selectedRecipe = recipe
                     }
             }
+        }
+    }
+    
+    var noResultsView: some View {
+        VStack {
+            Spacer()
+            HStack {
+                Spacer()
+                Text("No results found. Try Again")
+                    .font(.custom(.heavy, relativeTo: .caption2))
+                    .foregroundStyle(.white)
+                if (viewModel.searchText.isEmpty) {
+                    Image(systemName: "arrow.trianglehead.2.clockwise.rotate.90.icloud")
+                        .foregroundStyle(.white)
+                        .frame(width: 44, height: 44)
+                        .background(Color.gray.opacity(0.4))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .onTapGesture {
+                            viewModel.endpoint = .init(type: .allRecipes)
+                        }
+                }
+                Spacer()
+               
+            }
+            Spacer()
         }
     }
     

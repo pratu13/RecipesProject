@@ -7,13 +7,31 @@
 
 import Observation
 import Foundation
+import Swift
+
+protocol RecipesViewModable {
+    var error: Bool {get set }
+    var errorString: String {get set}
+    var isLoading: Bool {get set}
+}
 
 @Observable
-class RecipesViewModel {
+final class RecipesViewModel: Sendable, RecipesViewModable  {
     
+    private var isolationQueue: DispatchQueue = DispatchQueue(label: "com.recipes", attributes: .concurrent)
     private(set) var recipes: [Recipe] = []
     private(set) var filtered: [Recipe] = []
-    var isLoading: Bool = false
+    internal var error: Bool = false
+    internal var errorString: String = ""
+    internal var isLoading: Bool = false
+    var endpoint: RecipesEndpoint = .init(type: .emptyData) {
+        didSet {
+            Task {
+                await getAllRecipes()
+            }
+        }
+    }
+    
     var searchText: String = "" {
         didSet {
             if (!searchText.isEmpty) {
@@ -22,17 +40,12 @@ class RecipesViewModel {
         }
     }
 
-    func setMock() {
-        recipes.append(Recipe.mock)
-    }
-    
     func getAllRecipes() async {
-        isLoading = true
-        defer {
-            isLoading = false
+        isolationQueue.async(flags: .barrier) {
+            self.isLoading = true
         }
         do {
-            let result = await NetworkingManager.downloadData(from: .init(type: .allRecipes))
+            let result = await NetworkingManager.downloadData(from: endpoint)
             switch result {
             case .success(let recipes):
                 let decodedData = try JSONDecoder().decode(Recipes.self, from: recipes)
@@ -40,14 +53,54 @@ class RecipesViewModel {
                     guard let self = self else {
                         return
                     }
+                    isolationQueue.async(flags: .barrier) {
+                        self.isLoading = false
+                        self.error = false
+                    }
                     self.recipes = decodedData.recipes
                 }
             case .failure(let failure):
-                print(failure)
+                isolationQueue.async(flags: .barrier) {
+                    self.isLoading = false
+                    self.errorString = failure.localizedDescription
+                    self.error = true
+                }
             }
         } catch (let err) {
-            print(err)
+            isolationQueue.async(flags: .barrier) {
+                self.isLoading = false
+                self.errorString = err.localizedDescription
+                self.error = true
+            }
         }
+    }
+    
+}
+
+//MARK: - helpers
+extension RecipesViewModel {
+    
+    var loading: Bool {
+        isolationQueue.sync {
+            self.isLoading
+        }
+    }
+ 
+    
+    var errorDownloading: Bool {
+        isolationQueue.sync {
+            self.error
+        }
+    }
+    
+    var errorDescription: String {
+        isolationQueue.sync {
+            self.errorString
+        }
+    }
+    
+    func setMock() {
+        recipes.append(Recipe.mock)
     }
     
     private func filterRecipes(text: String, startingRecipes: [Recipe]) {
@@ -61,6 +114,5 @@ class RecipesViewModel {
         }
         filtered = updatedRecipes
     }
-
     
 }

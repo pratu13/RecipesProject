@@ -24,13 +24,13 @@ class NetworkingManager {
     
     private init() { }
     
-    static func downloadData(from endpoint: RecipesEndpoint) async -> Result<Data, Error> {
+    static func downloadData(from endpoint: RecipesEndpoint) async -> Result<Data, NetworkingError> {
         do {
             let (data, response) = try await URLSession.shared.data(from: endpoint.url)
             let validatedData = try handleURLResponse(data: data, response: response, url: endpoint.url)
             return .success(validatedData)
         } catch {
-            return .failure(error)
+            return .failure(.unknown)
         }
     }
     

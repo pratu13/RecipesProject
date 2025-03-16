@@ -39,9 +39,9 @@ struct RecipesEndpoint: Endpoint {
         case .allRecipes:
             return baseURL.appendingPathComponent("recipes.json").absoluteString
         case .malformedData:
-            return "recipes-malformed.json"
+            return baseURL.appendingPathComponent("recipes-malformed.json").absoluteString
         case .emptyData:
-            return "recipes-empty.json"
+            return baseURL.appendingPathComponent("recipes-empty.json").absoluteString
         case .image(let urlString):
             return urlString
         }
