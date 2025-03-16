@@ -15,6 +15,7 @@ struct RecipesHomeView: View {
     @State private var isAnimating = false
     @State var showDetail: Bool = false
     @State var animateButton: Bool = false
+    @State var showErrorView: Bool = false
     
     var body: some View {
         ZStack(alignment: .center) {
@@ -24,19 +25,24 @@ struct RecipesHomeView: View {
                 ZStack(alignment: .top) {
                     backgroundImage
         
-                    HStack {
+                    HStack(spacing: 5) {
                         SearchBarView(viewModel: viewModel)
+                        Image(systemName: "arrow.trianglehead.2.clockwise.rotate.90.icloud")
+                            .foregroundStyle(.white)
+                            .frame(width: 44, height: 44)
+                            .background(Color.gray.opacity(0.4))
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .onTapGesture {
+                                viewModel.endpoint = .init(type: .allRecipes)
+                            }
+                        Spacer()
                     }
                 }
-
                 VStack {
                     recipeInfoSection
                     recipeListSection
                 }
-                .task {
-                    await backgroundImageViewModel.getImage(for: selectedRecipe)
-                    await viewModel.getAllRecipes()
-                }
+               
                 .animation(.default, value: selectedRecipe)
                
             }
@@ -48,7 +54,7 @@ struct RecipesHomeView: View {
                 print("RecipesHomeView onAppear")
             }
             
-            if (viewModel.errorDownloading) {
+            if (showErrorView) {
                 ZStack {
                     Color.black.opacity(0.9)
                         .ignoresSafeArea()
@@ -58,6 +64,15 @@ struct RecipesHomeView: View {
                 }
                 .animation(.easeInOut, value: viewModel.error)
             }
+        }
+        .task {
+            await viewModel.getAllRecipes()
+        }
+        .task {
+            await backgroundImageViewModel.getImage(for: selectedRecipe)
+        }
+        .onChange(of: viewModel.errorDownloading) { oldValue, newValue in
+            showErrorView = newValue
         }
     }
     

@@ -24,7 +24,7 @@ final class RecipesViewModel: Sendable, RecipesViewModable  {
     internal var error: Bool = false
     internal var errorString: String = ""
     internal var isLoading: Bool = false
-    var endpoint: RecipesEndpoint = .init(type: .emptyData) {
+    var endpoint: RecipesEndpoint = .init(type: .allRecipes) {
         didSet {
             Task {
                 await getAllRecipes()
@@ -42,6 +42,7 @@ final class RecipesViewModel: Sendable, RecipesViewModable  {
 
     func getAllRecipes() async {
         isolationQueue.async(flags: .barrier) {
+            self.recipes.removeAll()
             self.isLoading = true
         }
         do {

@@ -15,7 +15,7 @@ struct SearchBarView: View {
             Image(systemName: "magnifyingglass")
                 .foregroundColor( viewModel.searchText.isEmpty ? .gray : .white)
 
-            TextField("Search by name or symbol...", text:  $viewModel.searchText)
+            TextField("Search by name or cuisine...", text:  $viewModel.searchText)
                 .foregroundColor(.white)
                 .disableAutocorrection(true)
                 .focused($isFocused)
