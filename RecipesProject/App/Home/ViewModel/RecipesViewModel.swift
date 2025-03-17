@@ -5,75 +5,55 @@
 //  Created by Pratyush on 3/11/25.
 //
 
-import Observation
+
 import Foundation
 import Swift
+import Combine
 
-protocol RecipesViewModable {
-    var error: Bool {get set }
-    var errorString: String {get set}
-    var isLoading: Bool {get set}
-}
-
-@Observable
-final class RecipesViewModel: Sendable, RecipesViewModable  {
+@Observable @MainActor
+class RecipesViewModel {
     
-    private var isolationQueue: DispatchQueue = DispatchQueue(label: "com.recipes", attributes: .concurrent)
+    //private var isolationQueue: DispatchQueue = DispatchQueue(label: "com.recipes", attributes: .concurrent)
     private(set) var recipes: [Recipe] = []
     private(set) var filtered: [Recipe] = []
-    internal var error: Bool = false
-    internal var errorString: String = ""
-    internal var isLoading: Bool = false
-    var endpoint: RecipesEndpoint = .init(type: .allRecipes) {
-        didSet {
-            Task {
-                await getAllRecipes()
-            }
-        }
-    }
-    
+    var error: Bool = false
+    var errorString: String = ""
+    var isLoading: Bool = false
+    var endpoint: RecipesEndpoint = .init(type: .allRecipes)
+
     var searchText: String = "" {
         didSet {
-            if (!searchText.isEmpty) {
-                filterRecipes(text: searchText, startingRecipes: recipes)
-            }
+            filterRecipes(text: searchText)
         }
     }
 
-    func getAllRecipes() async {
-        isolationQueue.async(flags: .barrier) {
-            self.recipes.removeAll()
-            self.isLoading = true
-        }
+    func getAllRecipes() async  {
+        isLoading = true
+        defer { isLoading = false }
+
         do {
             let result = await NetworkingManager.downloadData(from: endpoint)
             switch result {
             case .success(let recipes):
                 let decodedData = try JSONDecoder().decode(Recipes.self, from: recipes)
-                await MainActor.run { [weak self] in
-                    guard let self = self else {
-                        return
-                    }
-                    isolationQueue.async(flags: .barrier) {
-                        self.isLoading = false
-                        self.error = false
-                    }
-                    self.recipes = decodedData.recipes
-                }
+                print("success")
+                self.isLoading = false
+                self.error = false
+                self.recipes = decodedData.recipes
             case .failure(let failure):
-                isolationQueue.async(flags: .barrier) {
+                print("Error")
                     self.isLoading = false
                     self.errorString = failure.localizedDescription
                     self.error = true
-                }
+        
             }
         } catch (let err) {
-            isolationQueue.async(flags: .barrier) {
+            print("Error")
                 self.isLoading = false
                 self.errorString = err.localizedDescription
                 self.error = true
-            }
         }
+        
     }
     
 }
@@ -81,36 +61,17 @@ final class RecipesViewModel: Sendable, RecipesViewModable  {
 //MARK: - helpers
 extension RecipesViewModel {
     
-    var loading: Bool {
-        isolationQueue.sync {
-            self.isLoading
-        }
-    }
- 
-    
-    var errorDownloading: Bool {
-        isolationQueue.sync {
-            self.error
-        }
-    }
-    
-    var errorDescription: String {
-        isolationQueue.sync {
-            self.errorString
-        }
-    }
-    
     func setMock() {
         recipes.append(Recipe.mock)
     }
     
-    private func filterRecipes(text: String, startingRecipes: [Recipe]) {
+    func filterRecipes(text: String) {
         guard !text.isEmpty else {
-            filtered = startingRecipes
+            filtered = recipes
             return
         }
         let lowercasedText = text.lowercased()
-        let updatedRecipes = startingRecipes.filter { recipe in
+        let updatedRecipes = recipes.filter { recipe in
             return  recipe.name.lowercased().contains(lowercasedText) || recipe.cuisine.lowercased().contains(lowercasedText)
         }
         filtered = updatedRecipes

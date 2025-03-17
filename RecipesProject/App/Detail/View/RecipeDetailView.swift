@@ -10,8 +10,8 @@ import MediaPlayer
 
 struct RecipeDetailView: View {
     var recipe: Recipe
-    @Binding var showDetail: Bool
     @State private var showSafari = false
+    @Binding var showDetail: Bool
     
     var body: some View {
         ZStack(alignment: .center) {

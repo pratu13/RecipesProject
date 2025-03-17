@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct RecipesHomeView: View {
-    @Environment(RecipesViewModel.self) var viewModel
-    var backgroundImageViewModel: RecipeImageViewModel =  RecipeImageViewModel(size: .large)
-    @State private var selectedRecipe: Recipe = .mock
+    @State private var viewModel = RecipesViewModel()
+    @Environment(NetworkMonitor.self) var networkMonitor
     
+    @State private var backgroundImageViewModel: RecipeImageViewModel = RecipeImageViewModel(size: .large)
+    @State private var selectedRecipe: Recipe = .mock
     @State private var isAnimating = false
+    @State private var animateButton: Bool = false
     @State var showDetail: Bool = false
-    @State var animateButton: Bool = false
-    @State var showErrorView: Bool = false
     
     var body: some View {
         ZStack(alignment: .center) {
@@ -26,7 +26,7 @@ struct RecipesHomeView: View {
                     backgroundImage
         
                     HStack(spacing: 5) {
-                        SearchBarView(viewModel: viewModel)
+                        SearchBarView(searchText: $viewModel.searchText)
                         Image(systemName: "arrow.trianglehead.2.clockwise.rotate.90.icloud")
                             .foregroundStyle(.white)
                             .frame(width: 44, height: 44)
@@ -54,28 +54,38 @@ struct RecipesHomeView: View {
                 print("RecipesHomeView onAppear")
             }
             
-            if (showErrorView) {
+            if (!networkMonitor.isConnected || viewModel.error) {
                 ZStack {
-                    Color.black.opacity(0.9)
+                    Color.black
                         .ignoresSafeArea()
                         .transition(.asymmetric(insertion: .scale, removal: .scale))
-                    ErrorView(errorDescription: viewModel.errorDescription)
+                        .animation(.easeInOut, value: viewModel.error)
+                    ErrorView(viewModel: viewModel)
                         .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .scale))
+                        .animation(.easeInOut, value: viewModel.error)
                 }
                 .animation(.easeInOut, value: viewModel.error)
             }
         }
         .task {
+            print("GET")
             await viewModel.getAllRecipes()
         }
         .task {
+            print("GETIMAGE")
             await backgroundImageViewModel.getImage(for: selectedRecipe)
         }
-        .onChange(of: viewModel.errorDownloading) { oldValue, newValue in
-            showErrorView = newValue
+        .onChange(of: networkMonitor.isConnected) { oldValue, newValue in
+            if (newValue) {
+                Task {
+                    print("INTERNET GET")
+                    await viewModel.getAllRecipes()
+                }
+            }
+            
         }
+
     }
-    
 }
 
 //MARK: - Private members
@@ -175,7 +185,7 @@ private extension RecipesHomeView {
                 .font(.custom(.heavy, relativeTo: .title3))
                 .padding(.horizontal, 16)
                 .foregroundStyle(Color.white)
-            if viewModel.loading {
+            if (viewModel.isLoading) {
                 HStack{
                     Spacer()
                     ProgressView()
@@ -198,7 +208,7 @@ private extension RecipesHomeView {
     }
     
     var recipeList: some View {
-        CarousalView(recipes: viewModel.searchText.isEmpty ? viewModel.recipes : viewModel.filtered) { recipes in
+        CarousalView(recipes: viewModel.searchText.isEmpty ?  viewModel.recipes : viewModel.filtered) { recipes in
             ForEach(recipes, id: \.uuid) { recipe in
                 RecipeRowView(recipe: recipe)
                     .padding(.horizontal)
@@ -249,6 +259,6 @@ private extension RecipesHomeView {
 
 #Preview {
     RecipesHomeView()
-        .environment(RecipesViewModel())
+        .environment(NetworkMonitor())
 }
 

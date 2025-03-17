@@ -31,10 +31,9 @@ struct CarousalView<Content: View>: View {
 }
 
 #Preview {
-    CarousalView(recipes: [.mock, .mock]) { recipes in
+    CarousalView(recipes: [.mock, .mock2]) { recipes in
         ForEach(recipes, id: \.self) { recipe in
             RecipeRowView(recipe: recipe)
         }
-       
     }
 }

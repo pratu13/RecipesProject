@@ -29,7 +29,6 @@ struct RecipeRowView: View {
         .frame(height: UIScreen.main.bounds.height / 5)
         .background(Color.white)
         .shadow(radius: 20, y: 10)
-   
     }
 }
 

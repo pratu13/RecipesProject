@@ -9,13 +9,13 @@ import SwiftUI
 
 struct SearchBarView: View {
     @FocusState private var isFocused: Bool
-    @Bindable var viewModel: RecipesViewModel
+    @Binding var searchText: String
     var body: some View {
         HStack {
             Image(systemName: "magnifyingglass")
-                .foregroundColor( viewModel.searchText.isEmpty ? .gray : .white)
+                .foregroundColor(searchText.isEmpty ? .gray : .white)
 
-            TextField("Search by name or cuisine...", text:  $viewModel.searchText)
+            TextField("Search by name or cuisine...", text:  $searchText)
                 .foregroundColor(.white)
                 .disableAutocorrection(true)
                 .focused($isFocused)
@@ -27,9 +27,9 @@ struct SearchBarView: View {
                 .foregroundColor(.white)
                 .padding()
                 .offset(x: 10)
-                .opacity( viewModel.searchText.isEmpty ? 0.0 : 1.0)
+                .opacity(searchText.isEmpty ? 0.0 : 1.0)
                 .onTapGesture {
-                    viewModel.searchText = ""
+                    searchText = ""
                 }
             
             ,alignment: .trailing)
@@ -42,7 +42,7 @@ struct SearchBarView: View {
 }
 
 #Preview(traits: .sizeThatFitsLayout) {
-    SearchBarView(viewModel: RecipesViewModel())
+    SearchBarView(searchText: .constant(""))
         .preferredColorScheme(.dark)
         .padding()
 }

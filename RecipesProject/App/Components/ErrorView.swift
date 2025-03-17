@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct ErrorView: View {
-    @Environment(RecipesViewModel.self) var viewModel
-    let errorDescription: String
+    @Bindable var viewModel: RecipesViewModel
     var body: some View {
         VStack(alignment: .center) {
             HStack {
                 Text("Opps something went wrong")
                     .font(.custom(.heavy, relativeTo: .headline))
+                    .foregroundStyle(.black)
                 Image(systemName: "arrow.trianglehead.2.clockwise.rotate.90.icloud")
                     .foregroundStyle(.white)
                     .frame(width: 44, height: 44)
@@ -26,10 +26,12 @@ struct ErrorView: View {
             }
             
             Spacer()
-            Text(errorDescription)
+            Text(!viewModel.errorString.isEmpty ? viewModel.errorString : "Not connected to internet")
+                .foregroundStyle(.red)
                 .font(.custom(.medium, relativeTo: .body))
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
+                
             Spacer()
             Button {
                 Task.detached {
@@ -68,6 +70,5 @@ struct ErrorView: View {
 
 
 #Preview {
-    ErrorView( errorDescription: "Failed to download the recipes due to invalid JSON")
-        .environment(RecipesViewModel())
+    ErrorView(viewModel: RecipesViewModel())
 }

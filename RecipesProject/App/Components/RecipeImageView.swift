@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct RecipeImageView: View {
-    var recipeImageViewModel: RecipeImageViewModel
+    @State var recipeImageViewModel: RecipeImageViewModel
     let recipe: Recipe
     init(recipe: Recipe, size: ImageSize = .large) {
         self.recipe = recipe
-        recipeImageViewModel = RecipeImageViewModel(size: size)
+        _recipeImageViewModel = State(wrappedValue: RecipeImageViewModel(size: size))
         print("Initializing RecipeImageView with recipe: \(recipe.name)")
     }
     var body: some View {

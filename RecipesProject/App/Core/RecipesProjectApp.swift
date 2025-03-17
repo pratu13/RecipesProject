@@ -9,13 +9,11 @@ import SwiftUI
 
 @main
 struct RecipesProjectApp: App {
-   @State var viewModel = RecipesViewModel()
+    @State var networkMonitor = NetworkMonitor()
     var body: some Scene {
         WindowGroup {
-            NavigationStack {
-                RecipesHomeView()
-                    .environment(viewModel)
-            }
+            RecipesHomeView()
+                .environment(networkMonitor)
         }
     }
 }
