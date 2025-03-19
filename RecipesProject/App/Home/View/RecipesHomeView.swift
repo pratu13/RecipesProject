@@ -30,14 +30,6 @@ struct RecipesHomeView: View {
         
                     HStack(spacing: 5) {
                         SearchBarView(searchText: $viewModel.searchText)
-                        Image(systemName: "arrow.trianglehead.2.clockwise.rotate.90.icloud")
-                            .foregroundStyle(.white)
-                            .frame(width: 44, height: 44)
-                            .background(Color.gray.opacity(0.4))
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                            .onTapGesture {
-                                viewModel.endpoint = .init(type: .allRecipes)
-                            }
                         Spacer()
                     }
                 }
