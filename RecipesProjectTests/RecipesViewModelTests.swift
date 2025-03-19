@@ -9,9 +9,10 @@
 import XCTest
 @testable import RecipesProject
 
+@MainActor
 final class RecipesViewModelTests: XCTestCase {
     
-    func testRecipesViewModelInitialization() {
+   func testRecipesViewModelInitialization() {
         let viewModel = RecipesViewModel()
         
         XCTAssertTrue(viewModel.recipes.isEmpty)
@@ -54,5 +55,42 @@ final class RecipesViewModelTests: XCTestCase {
         viewModel.searchText = "Nonexistent"
         
         XCTAssertTrue(viewModel.filtered.isEmpty)
+    }
+    
+    func testGetAllRecipesMalformedData() async {
+        let viewModel = RecipesViewModel()
+        viewModel.endpoint = RecipesEndpoint(type: .malformedData)
+        
+        await viewModel.getAllRecipes()
+        
+        XCTAssertFalse(viewModel.isLoading)
+        XCTAssertTrue(viewModel.recipes.isEmpty)
+        XCTAssertTrue(viewModel.error)
+        XCTAssertFalse(viewModel.errorString.isEmpty)
+    }
+    
+    func testGetAllRecipesEmptyData() async {
+        let viewModel = RecipesViewModel()
+        viewModel.endpoint = RecipesEndpoint(type: .emptyData)
+        
+        await viewModel.getAllRecipes()
+        
+        XCTAssertFalse(viewModel.isLoading)
+        XCTAssertTrue(viewModel.recipes.isEmpty)
+        XCTAssertFalse(viewModel.error)
+    }
+    
+    func testGetAllRecipesNetworkError() async {
+        let viewModel = RecipesViewModel()
+        // Simulate network error by setting a bad URL
+        viewModel.endpoint = RecipesEndpoint(type: .image("https://badURL.com"))
+        
+        await viewModel.getAllRecipes()
+        
+        XCTAssertFalse(viewModel.isLoading)
+        XCTAssertTrue(viewModel.recipes.isEmpty)
+        XCTAssertTrue(viewModel.error)
+        XCTAssertFalse(viewModel.errorString.isEmpty)
+        
     }
 }

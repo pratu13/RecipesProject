@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import TipKit
 
 @main
 struct RecipesProjectApp: App {
@@ -14,6 +15,12 @@ struct RecipesProjectApp: App {
         WindowGroup {
             RecipesHomeView()
                 .environment(networkMonitor)
+                .task {
+                    try? Tips.configure([
+                        .displayFrequency(.immediate),
+                        .datastoreLocation(.applicationDefault)
+                    ])
+                }
         }
     }
 }

@@ -6,10 +6,10 @@
 //
 
 import SwiftUI
-import MediaPlayer
 
 struct RecipeDetailView: View {
-    var recipe: Recipe
+    let recipe: Recipe
+    let backgroundImage: Image
     @State private var showSafari = false
     @Binding var showDetail: Bool
     
@@ -19,10 +19,10 @@ struct RecipeDetailView: View {
                 .ignoresSafeArea()
             
             VStack(spacing: 0) {
-                RecipeImageView(recipe: recipe)
-                    .frame(maxWidth: .infinity)
+                backgroundImage
+                    .resizable()
                     .scaledToFill()
-                    .frame(height: UIScreen.main.bounds.height / 2)
+//                    .frame(height: UIScreen.main.bounds.height / 3)
                     .overlay(alignment: .topLeading) {
                         HStack {
                             closeButton
@@ -31,19 +31,23 @@ struct RecipeDetailView: View {
                         .padding(.horizontal)
                     }
                 
-                recipeTitle
-            
-                HStack {
-                    cuisineSection
-                    if let _ = recipe.source_url {
-                        sourceSection
-                    }
-                }
-                youtubeSection
+                VStack(spacing: 0) {
+                    recipeTitle
                 
-                Spacer()
+                    HStack {
+                        cuisineSection
+                        if let _ = recipe.source_url {
+                            sourceSection
+                        }
+                    }
+                    youtubeSection
+                    
+                    Spacer()
+                }
+               
                 
             }
+            .frame(maxWidth: UIScreen.main.bounds.width)
             .sheet(isPresented: $showSafari) {
                 if let sourceUrl = URL(string: recipe.source_url ?? "") {
                     SafariView(url: sourceUrl)
@@ -56,7 +60,7 @@ struct RecipeDetailView: View {
 }
 
 #Preview {
-    RecipeDetailView(recipe: .mock, showDetail: .constant(true))
+    RecipeDetailView(recipe: .mock, backgroundImage: Image("bg"), showDetail: .constant(true))
 }
     
 //MARK: - Privat members

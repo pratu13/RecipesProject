@@ -25,6 +25,8 @@ class RecipeImageViewModel {
         self.isLoading = true
     }
     
+    /// donwloads and caches the image for a given recupe
+    /// - Parameter recipe: Recipe for which the image is being downloaded
     func getImage(for recipe: Recipe) async {
         let data = await RecipeImageService.downloaImage(for: recipe, of: imageSize)
         switch data {
@@ -39,7 +41,6 @@ class RecipeImageViewModel {
                 self.isLoading = false
                 print("failed downloaed: \(recipe.name)")
             }
-            print(failure)
         }
     }
 }

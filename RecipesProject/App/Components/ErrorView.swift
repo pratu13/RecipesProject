@@ -26,7 +26,7 @@ struct ErrorView: View {
             }
             
             Spacer()
-            Text(!viewModel.errorString.isEmpty ? viewModel.errorString : "Not connected to internet")
+            Text(!viewModel.errorString.isEmpty ? viewModel.errorString : "Please check network")
                 .foregroundStyle(.red)
                 .font(.custom(.medium, relativeTo: .body))
                 .multilineTextAlignment(.center)

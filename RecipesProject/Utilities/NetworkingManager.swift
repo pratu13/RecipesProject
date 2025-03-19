@@ -16,14 +16,17 @@ class NetworkingManager {
         
         var errorDescription: String? {
             switch self {
-            case .badURLResponse(let url): return "[🔥] Bad response from \(url.absoluteString)"
-            case .unknown: return "[⚠️] unknown error return"
+            case .badURLResponse(let url): return "Bad response from \(url.absoluteString)"
+            case .unknown: return "Unknown error"
             }
         }
     }
     
     private init() { }
     
+    /// Network Managers download api
+    /// - Parameter endpoint: Endpoint indicating the end url to donwload
+    /// - Returns: a result with the data or any network error
     static func downloadData(from endpoint: RecipesEndpoint) async -> Result<Data, NetworkingError> {
         do {
             let (data, response) = try await URLSession.shared.data(from: endpoint.url)

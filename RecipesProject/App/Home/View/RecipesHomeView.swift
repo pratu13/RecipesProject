@@ -6,16 +6,19 @@
 //
 
 import SwiftUI
+import TipKit
 
 struct RecipesHomeView: View {
     @State private var viewModel = RecipesViewModel()
     @Environment(NetworkMonitor.self) var networkMonitor
     
     @State private var backgroundImageViewModel: RecipeImageViewModel = RecipeImageViewModel(size: .large)
-    @State private var selectedRecipe: Recipe = .mock
+    @State private var selectedRecipe: Recipe? = nil
     @State private var isAnimating = false
     @State private var animateButton: Bool = false
     @State var showDetail: Bool = false
+    @State private var sortOption: SortOption = .name
+    private let sortToolTip = SortToolTip()
     
     var body: some View {
         ZStack(alignment: .center) {
@@ -47,14 +50,17 @@ struct RecipesHomeView: View {
                
             }
             .fullScreenCover(isPresented: $showDetail) {
-                RecipeDetailView(recipe: selectedRecipe,
-                                 showDetail: $showDetail)
+                if let backgroundImage = backgroundImageViewModel.image, let selectedRecipe = selectedRecipe {
+                    RecipeDetailView(recipe: selectedRecipe, backgroundImage: backgroundImage,
+                                     showDetail: $showDetail)
+                }
+               
             }
             .onAppear {
                 print("RecipesHomeView onAppear")
             }
             
-            if (!networkMonitor.isConnected || viewModel.error) {
+            if (!networkMonitor.isConnected || viewModel.error || selectedRecipe == nil) {
                 ZStack {
                     Color.black
                         .ignoresSafeArea()
@@ -73,16 +79,23 @@ struct RecipesHomeView: View {
         }
         .task {
             print("GETIMAGE")
-            await backgroundImageViewModel.getImage(for: selectedRecipe)
+            if let selectedRecipe = selectedRecipe {
+                getBackgroundImage(for: selectedRecipe)
+            }
+           
         }
-        .onChange(of: networkMonitor.isConnected) { oldValue, newValue in
+        .onChange(of: networkMonitor.isConnected) { _, newValue in
             if (newValue) {
                 Task {
                     print("INTERNET GET")
                     await viewModel.getAllRecipes()
                 }
             }
-            
+        }
+        .onChange(of: viewModel.selectedRecipe!) { _, newValue in
+            selectedRecipe = newValue
+            getBackgroundImage(for: newValue)
+         
         }
 
     }
@@ -102,16 +115,23 @@ private extension RecipesHomeView {
                         .scaledToFill()
                         .ignoresSafeArea()
                         .onAppear {
-                            print("Loading image for recipe: \(selectedRecipe.name)")
+                            print("Loading image for recipe: \(selectedRecipe?.name ?? "not set")")
                         }
                 } else {
-                    HStack {
-                        Spacer()
-                        ProgressView()
-                            .tint(.white)
-                        Spacer()
+                    ZStack {
+                        Image("bg")
+                            .resizable()
+                            .clipped()
+                            .scaledToFill()
+                            .ignoresSafeArea()
+                        
+                        HStack {
+                            Spacer()
+                            ProgressView()
+                                .tint(.white)
+                            Spacer()
+                        }
                     }
-                    
                 }
                 
                 Spacer()
@@ -136,17 +156,22 @@ private extension RecipesHomeView {
         VStack(spacing: 10) {
             Spacer()
             recipeName
-            seeMoreButton
+            if let _ = selectedRecipe {
+                seeMoreButton
+            }
             Spacer()
         }
     }
     
     var recipeName: some View {
         HStack {
-            Text(selectedRecipe.name)
-                .font(.custom(.regular, relativeTo: .largeTitle))
-                .foregroundStyle(Color.white)
-                .lineLimit(3)
+            if let selectedRecipe = selectedRecipe {
+                Text(selectedRecipe.name)
+                    .font(.custom(.regular, relativeTo: .largeTitle))
+                    .foregroundStyle(Color.white)
+                    .lineLimit(3)
+            }
+           
             Spacer()
         }
         .padding(.horizontal, 16)
@@ -167,7 +192,7 @@ private extension RecipesHomeView {
             .padding(.horizontal)
             .scaleEffect(animateButton ? 1.1 : 1.0)
             .animation(.spring(), value: animateButton)
-            .onChange(of: selectedRecipe, { _, newValue in
+            .onChange(of: selectedRecipe ?? .mock, { _, newValue in
                 Task {
                     
                     await backgroundImageViewModel.getImage(for: newValue)
@@ -181,10 +206,42 @@ private extension RecipesHomeView {
     var recipeListSection: some View {
         VStack(alignment: .leading) {
             Spacer()
-            Text(!viewModel.searchText.isEmpty ? "Searching ..." : "Trending Recipes")
-                .font(.custom(.heavy, relativeTo: .title3))
-                .padding(.horizontal, 16)
-                .foregroundStyle(Color.white)
+            HStack(spacing: 4.0) {
+                Text(!viewModel.searchText.isEmpty ? "Searching ..." : "Trending Recipes")
+                    .font(.custom(.heavy, relativeTo: .title3))
+                    .padding(.horizontal, 16)
+                    .foregroundStyle(Color.white)
+                HStack {
+                   
+                    Image(systemName: "chevron.down")
+                        .foregroundStyle(.black)
+                        .frame(width: 24, height: 24)
+                        .background(Color.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .rotationEffect(Angle(degrees: (viewModel.sortOption == .name || viewModel.sortOption == .cuisine ) ?  0.0 : 180.0))
+                        .onTapGesture {
+                            withAnimation {
+                                sortOption = viewModel.sortWith(option: sortOption)
+                            }
+                            sortToolTip.invalidate(reason: .actionPerformed)
+
+                            SortToolTip.hasViewedSortTip = true
+                            
+                        }
+                       
+                    Text(sortOption.title)
+                        .foregroundStyle(.white)
+                        .font(.custom(.demibold, relativeTo: .callout))
+                        .popoverTip(sortToolTip, arrowEdge: .bottom)
+                        .help("Long press here")
+                }
+                .contextMenu {
+                    contextMenuOptions
+                }
+                Spacer()
+            }
+            
+    
             if (viewModel.isLoading) {
                 HStack{
                     Spacer()
@@ -232,7 +289,7 @@ private extension RecipesHomeView {
                         .foregroundStyle(.white)
                         .frame(width: 44, height: 44)
                         .background(Color.gray.opacity(0.4))
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .clipShape(RoundedRectangle(cornerRadius: 2))
                         .onTapGesture {
                             viewModel.endpoint = .init(type: .allRecipes)
                         }
@@ -241,6 +298,22 @@ private extension RecipesHomeView {
                
             }
             Spacer()
+        }
+    }
+    
+    @ViewBuilder
+    var contextMenuOptions: some View {
+        ForEach([SortOption.name, SortOption.cuisine], id:\.self) { option in
+            Button {
+                sortOption = option
+                viewModel.sortOption = sortOption
+            } label: {
+                Text(option.rawValue.capitalized)
+                    .foregroundStyle(.black)
+                    .font(.custom(.demibold, relativeTo: .callout))
+            }
+
+           
         }
     }
     
@@ -255,10 +328,24 @@ private extension RecipesHomeView {
             animateButton = false
         }
     }
+    
+    func getBackgroundImage(for recipe: Recipe) {
+        Task {
+            await backgroundImageViewModel.getImage(for: recipe)
+        }
+    }
 }
 
 #Preview {
     RecipesHomeView()
         .environment(NetworkMonitor())
+        .task {
+            try? Tips.resetDatastore()
+            
+            try? Tips.configure([
+                .displayFrequency(.immediate),
+                .datastoreLocation(.applicationDefault)
+            ])
+        }
 }
 
