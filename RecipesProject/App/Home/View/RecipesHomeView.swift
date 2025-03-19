@@ -16,9 +16,9 @@ struct RecipesHomeView: View {
     @State private var selectedRecipe: Recipe? = nil
     @State private var isAnimating = false
     @State private var animateButton: Bool = false
-    @State var showDetail: Bool = false
     @State private var sortOption: SortOption = .name
-    private let sortToolTip = SortToolTip()
+    @State var showDetail: Bool = false
+   
     
     var body: some View {
         ZStack(alignment: .center) {
@@ -223,17 +223,11 @@ private extension RecipesHomeView {
                             withAnimation {
                                 sortOption = viewModel.sortWith(option: sortOption)
                             }
-                            sortToolTip.invalidate(reason: .actionPerformed)
-
-                            SortToolTip.hasViewedSortTip = true
-                            
                         }
                        
                     Text(sortOption.title)
                         .foregroundStyle(.white)
                         .font(.custom(.demibold, relativeTo: .callout))
-                        .popoverTip(sortToolTip, arrowEdge: .bottom)
-                        .help("Long press here")
                 }
                 .contextMenu {
                     contextMenuOptions
@@ -339,13 +333,5 @@ private extension RecipesHomeView {
 #Preview {
     RecipesHomeView()
         .environment(NetworkMonitor())
-        .task {
-            try? Tips.resetDatastore()
-            
-            try? Tips.configure([
-                .displayFrequency(.immediate),
-                .datastoreLocation(.applicationDefault)
-            ])
-        }
 }
 

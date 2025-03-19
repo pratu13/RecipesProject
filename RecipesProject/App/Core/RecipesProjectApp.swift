@@ -15,12 +15,6 @@ struct RecipesProjectApp: App {
         WindowGroup {
             RecipesHomeView()
                 .environment(networkMonitor)
-                .task {
-                    try? Tips.configure([
-                        .displayFrequency(.immediate),
-                        .datastoreLocation(.applicationDefault)
-                    ])
-                }
         }
     }
 }
